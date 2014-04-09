@@ -1,5 +1,6 @@
 ﻿var myApp = {};
 myApp.url = "https://carsalex.firebaseio.com/.json";
+myApp.currentEdit = null;
 myApp.makeCar = function () {
     var color = document.getElementById("color").value;
     var make = document.getElementById("make").value;
@@ -22,6 +23,10 @@ myApp.writeTable = function () {
         holder += "<td>" + myApp.Cars[car].make + "</td>";
         holder += "<td>" + myApp.Cars[car].color + "</td>";
         holder += "<td>" +
+            "<span class='btn btn-warning glyphicon glyphicon-edit'" +
+            "onclick='myApp.editCar(" + car + ")'></span>"
+            + "</td>";
+        holder += "<td>" +
             "<span class='btn btn-danger glyphicon glyphicon-trash'" +
             "onclick='myApp.deleteCar(" + car + ")'></span>"
             + "</td>";
@@ -30,6 +35,22 @@ myApp.writeTable = function () {
     holder += "</table>";
     document.getElementById("CarTable").innerHTML = holder;
 };
+myApp.editCar = function (index) {
+    $("#myModal").modal();
+    myApp.currentEdit = index;
+    document.getElementById("colorModal").value = myApp.Cars[index].color;
+    document.getElementById("makeModal").value = myApp.Cars[index].make;
+    myApp.writeTable();
+};
+myApp.saveEdit = function () {
+    var color = document.getElementById("colorModal").value;
+    var make = document.getElementById("makeModal").value;
+    myApp.Cars[myApp.currentEdit].color = color;
+    myApp.Cars[myApp.currentEdit].make = make;
+    myApp.writeTable();
+    myApp.currentEdit = null;
+    $("#myModal").modal('hide');
+}
 myApp.deleteCar = function (index) {
     myApp.Cars.splice(index, 1);
     myApp.writeTable();
